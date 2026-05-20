@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+import json
 from typing import Any
 
 import voluptuous as vol
@@ -19,7 +20,7 @@ from homeassistant.core import callback
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import FintrafficApiClient, FintrafficApiError, StopSearchResult
+from .api import FintrafficApiClient, FintrafficApiError
 
 from .const import (
     CONF_CUTOFF_MINUTES,
@@ -38,6 +39,31 @@ from .const import (
 
 def _normalize_single_stop_id(value: str) -> str:
     return normalize_stop_id(value) if value.strip() else ""
+
+
+def _encode_stop_selection(stop_id: str, title: str) -> str:
+    return json.dumps({"stop_id": stop_id, "title": title}, separators=(",", ":"))
+
+
+def _decode_stop_selection(value: str) -> tuple[str, str] | None:
+    try:
+        payload = json.loads(value)
+    except json.JSONDecodeError:
+        return None
+
+    if not isinstance(payload, dict):
+        return None
+
+    stop_id = payload.get("stop_id")
+    title = payload.get("title")
+    if not isinstance(stop_id, str) or not isinstance(title, str):
+        return None
+
+    normalized_stop_id = normalize_stop_id(stop_id)
+    if not normalized_stop_id:
+        return None
+
+    return normalized_stop_id, title.strip() or normalized_stop_id
 
 
 class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -114,7 +140,7 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
     """Handle stop subentries."""
 
     def __init__(self) -> None:
-        self._search_results: list[StopSearchResult] = []
+        self._search_results: list[dict[str, str]] = []
 
     async def async_step_user(
         self, user_input: Mapping[str, Any] | None = None
@@ -130,10 +156,14 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
             if lookup_query:
                 try:
                     api = FintrafficApiClient(async_get_clientsession(self.hass))
-                    self._search_results = await api.async_search_stops(lookup_query)
+                    search_results = await api.async_search_stops(lookup_query)
                 except FintrafficApiError:
                     errors[CONF_STOP_LOOKUP_QUERY] = "lookup_failed"
                 else:
+                    self._search_results = [
+                        {"stop_id": result.stop_id, "title": result.label}
+                        for result in search_results
+                    ]
                     if self._search_results:
                         return await self.async_step_select_stop()
                     errors[CONF_STOP_LOOKUP_QUERY] = "no_search_results"
@@ -153,22 +183,27 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
         self, user_input: Mapping[str, Any] | None = None
     ) -> SubentryFlowResult:
         errors: dict[str, str] = {}
-
-        if user_input is not None:
-            stop_id = user_input[CONF_STOP_ID]
-            title = next(
-                (result.label for result in self._search_results if result.stop_id == stop_id),
-                stop_id,
-            )
-            return await self._async_create_stop_subentry(stop_id, title)
-
         options = [
             selector.SelectOptionDict(
-                value=result.stop_id,
-                label=f"{result.label} ({result.stop_id})",
+                value=_encode_stop_selection(result["stop_id"], result["title"]),
+                label=f"{result['title']} ({result['stop_id']})",
             )
             for result in self._search_results
         ]
+
+        if user_input is not None:
+            selection = _decode_stop_selection(user_input[CONF_STOP_ID])
+            if selection is None:
+                errors[CONF_STOP_ID] = "invalid_stop_id"
+            else:
+                stop_id, title = selection
+                self._search_results = []
+                return await self._async_create_stop_subentry(stop_id, title)
+
+        if not options:
+            errors[CONF_STOP_LOOKUP_QUERY] = "no_search_results"
+            return await self.async_step_user()
+
         schema = vol.Schema(
             {
                 vol.Required(CONF_STOP_ID): selector.SelectSelector(
@@ -186,8 +221,10 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
         stop_id: str,
         title: str,
     ) -> SubentryFlowResult:
-        await self.async_set_unique_id(stop_id)
-        self._abort_if_unique_id_configured()
+        for existing_subentry in self._get_entry().subentries.values():
+            if existing_subentry.unique_id == stop_id:
+                return self.async_abort(reason="already_configured")
+
         return self.async_create_entry(
             title=title,
             unique_id=stop_id,
