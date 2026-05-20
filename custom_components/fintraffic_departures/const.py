@@ -7,6 +7,8 @@ from pathlib import Path
 DOMAIN = "fintraffic_departures"
 
 CONF_STOP_IDS = "stop_ids"
+CONF_STOP_LOOKUP_QUERY = "stop_lookup_query"
+CONF_SELECTED_STOP_IDS = "selected_stop_ids"
 CONF_NUMBER_OF_DEPARTURES = "number_of_departures"
 CONF_CUTOFF_MINUTES = "cutoff_minutes"
 CONF_UPDATE_INTERVAL_MINUTES = "update_interval_minutes"
@@ -17,14 +19,32 @@ DEFAULT_UPDATE_INTERVAL_MINUTES = 15
 COORDINATOR_UPDATE_INTERVAL = timedelta(minutes=1)
 
 GRAPHQL_URL = "https://matkamonitori.digitransit.fi/api/graphql"
+GEOCODING_SEARCH_URL = "https://matkamonitori.digitransit.fi/api/geocoding/search"
 GRAPHQL_ENDPOINT_VALUE = "routing/v2/finland/gtfs/v1"
 GRAPHQL_USER_HEADER = "Digitraffic-User"
+GEOCODING_SEARCH_SIZE = 40
+GEOCODING_SEARCH_LAYERS = "stop,station"
+GEOCODING_SEARCH_SOURCES = (
+  "gtfsMATKA,gtfsCAR_FERRIES,gtfsHSL,gtfstampere,gtfsLINKKI,gtfsOULU,"
+  "gtfsdigitraffic,gtfsRauma,gtfsHameenlinna,gtfsKotka,gtfsKouvola,"
+  "gtfsLappeenranta,gtfsMikkeli,gtfsVaasa,gtfsJoensuu,gtfsFOLI,gtfsLahti,"
+  "gtfsKuopio,gtfsRovaniemi,gtfsKajaani,gtfsSalo,gtfsPori,gtfsRaasepori,"
+  "gtfsVikingline,gtfsVARELY,gtfsHarma,gtfsPohjolanMatka,gtfsKorsisaari,"
+  "gtfsKoivistonAuto,gtfsPahkakankaanLiikenne,gtfsIngvesSvanback"
+)
 
 ATTR_PRIMARY_DEPARTURE = "primary_departure"
 ATTR_NEXT_DEPARTURES = "next_departures"
 ATTR_ALERTS = "alerts"
 ATTR_STOP_ID = "stop_id"
 ATTR_STOP_NAME = "stop_name"
+
+
+def normalize_stop_id(stop_id: str) -> str:
+  normalized = stop_id.strip()
+  if normalized.startswith("GTFS:"):
+    return normalized[5:]
+  return normalized
 
 
 def _load_integration_version() -> str:

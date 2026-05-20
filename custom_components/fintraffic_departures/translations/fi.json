@@ -3,12 +3,20 @@
     "step": {
       "user": {
         "title": "Fintraffic lähdöt",
-        "description": "Määritä yksi tai useampi GTFS-pysäkkitunnus sekä päivitysväli.",
+        "description": "Syötä GTFS-pysäkkitunnukset suoraan tai hae pysäkkejä nimellä ja määritä sitten päivitysväli.",
         "data": {
+          "stop_lookup_query": "Pysäkkihaku",
           "stop_ids": "Pysäkkitunnukset (pilkulla eroteltuna)",
           "number_of_departures": "Lähtöjen määrä",
           "cutoff_minutes": "Rajaus minuutteina",
           "update_interval_minutes": "API-päivitysväli minuutteina"
+        }
+      },
+      "select_stops": {
+        "title": "Valitse pysäkit",
+        "description": "Valitse yksi tai useampi pysäkki hakutuloksista.",
+        "data": {
+          "selected_stop_ids": "Hakua vastaavat pysäkit"
         }
       }
     },
@@ -16,7 +24,9 @@
       "invalid_stop_ids": "Anna vähintään yksi pysäkkitunnus.",
       "invalid_departure_count": "Lähtöjen määrän on oltava vähintään 1.",
       "invalid_cutoff_minutes": "Rajaus minuutteina ei voi olla negatiivinen.",
-      "invalid_update_interval_minutes": "Päivitysvälin on oltava vähintään 1 minuutti."
+      "invalid_update_interval_minutes": "Päivitysvälin on oltava vähintään 1 minuutti.",
+      "lookup_failed": "Pysäkkihaku epäonnistui. Yritä myöhemmin uudelleen.",
+      "no_search_results": "Hakua vastaavia pysäkkejä ei löytynyt."
     },
     "abort": {
       "already_configured": "Tämä määritys on jo olemassa."

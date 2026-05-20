@@ -13,7 +13,7 @@ Home Assistant custom integration for upcoming departures from the Fintraffic Di
 
 ## Features
 
-- Config flow setup for one or more GTFS stop ids
+- Config flow setup for one or more GTFS stop ids, with REST-based stop name lookup
 - One sensor per configured stop
 - Configurable API polling interval with a default of 15 minutes
 - Sensor values and attributes recalculated every minute from the latest retrieved data
@@ -46,12 +46,15 @@ Home Assistant custom integration for upcoming departures from the Fintraffic Di
 
 The config flow asks for:
 
+- `stop_lookup_query`: optional stop-name search text for finding ids from the REST geocoding API
 - `stop_ids`: comma-separated GTFS ids such as `MATKA:357184`
 - `number_of_departures`: how many departures to retain after sorting and filtering
 - `cutoff_minutes`: exclude departures that are in the past or within this many minutes from now
 - `update_interval_minutes`: API polling interval for refreshing departures, default `15`
 
 The integration sends a built-in `Digitraffic-User` header for API identification and does not require that value during setup.
+
+If `stop_ids` is left empty and a `stop_lookup_query` is provided, the integration searches the Fintraffic geocoding endpoint and lets you select matching stops before creating the config entry.
 
 ## Sensor behavior
 
