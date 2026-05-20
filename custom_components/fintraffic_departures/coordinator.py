@@ -12,10 +12,12 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .api import FintrafficApiClient, FintrafficApiError
 from .const import (
+    COORDINATOR_UPDATE_INTERVAL,
     CONF_CUTOFF_MINUTES,
     CONF_NUMBER_OF_DEPARTURES,
     CONF_STOP_IDS,
-    DEFAULT_UPDATE_INTERVAL,
+    CONF_UPDATE_INTERVAL_MINUTES,
+    DEFAULT_UPDATE_INTERVAL_MINUTES,
     DOMAIN,
 )
 from .models import AlertInfo, DepartureInfo, StopData
@@ -47,22 +49,42 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
             hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=DEFAULT_UPDATE_INTERVAL,
+            update_interval=COORDINATOR_UPDATE_INTERVAL,
         )
         self.entry = entry
         self.api = FintrafficApiClient(async_get_clientsession(hass))
+        self._cached_stops: list[dict[str, Any]] | None = None
+        self._last_api_refresh: datetime | None = None
 
     async def _async_update_data(self) -> dict[str, StopData]:
+        now = datetime.now(UTC)
         stop_ids: list[str] = list(self.entry.data[CONF_STOP_IDS])
         number_of_departures: int = self.entry.data[CONF_NUMBER_OF_DEPARTURES]
         cutoff_minutes: int = self.entry.data[CONF_CUTOFF_MINUTES]
+        api_update_interval_minutes: int = self.entry.data.get(
+            CONF_UPDATE_INTERVAL_MINUTES,
+            DEFAULT_UPDATE_INTERVAL_MINUTES,
+        )
 
-        try:
-            stops = await self.api.async_get_departures(stop_ids, number_of_departures)
-        except FintrafficApiError as err:
-            raise UpdateFailed(str(err)) from err
+        refresh_due = (
+            self._cached_stops is None
+            or self._last_api_refresh is None
+            or now >= self._last_api_refresh + timedelta(minutes=api_update_interval_minutes)
+        )
 
-        return self._normalize_stops(stops, number_of_departures, cutoff_minutes)
+        if refresh_due:
+            try:
+                self._cached_stops = await self.api.async_get_departures(
+                    stop_ids,
+                    number_of_departures,
+                )
+                self._last_api_refresh = now
+            except FintrafficApiError as err:
+                if self._cached_stops is None:
+                    raise UpdateFailed(str(err)) from err
+                LOGGER.warning("API refresh failed, reusing cached departures: %s", err)
+
+        return self._normalize_stops(self._cached_stops or [], number_of_departures, cutoff_minutes)
 
     def _normalize_stops(
         self,

@@ -15,6 +15,9 @@ Home Assistant custom integration for upcoming departures from the Fintraffic Di
 
 - Config flow setup for one or more GTFS stop ids
 - One sensor per configured stop
+- Configurable API polling interval with a default of 15 minutes
+- Sensor values and attributes recalculated every minute from the latest retrieved data
+- Internal `Digitraffic-User` request header for API identification
 - Timestamp sensor state for the next valid departure after the cutoff window
 - Attributes for the primary departure, following departures, and active alerts
 
@@ -46,10 +49,13 @@ The config flow asks for:
 - `stop_ids`: comma-separated GTFS ids such as `MATKA:357184`
 - `number_of_departures`: how many departures to retain after sorting and filtering
 - `cutoff_minutes`: exclude departures that are in the past or within this many minutes from now
+- `update_interval_minutes`: API polling interval for refreshing departures, default `15`
+
+The integration sends a built-in `Digitraffic-User` header for API identification and does not require that value during setup.
 
 ## Sensor behavior
 
-Each sensor uses the next departure datetime as its state. Route names and related metadata are exposed in attributes because a Home Assistant sensor state can only hold one value.
+Each sensor uses the next departure datetime as its state. Route names and related metadata are exposed in attributes because a Home Assistant sensor state can only hold one value. The integration recalculates sensor state and attributes once a minute from cached API data, while the external API call itself follows the configured interval.
 
 Main attributes:
 

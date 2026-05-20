@@ -4,7 +4,7 @@ from typing import Any
 
 from aiohttp import ClientError, ClientSession
 
-from .const import GRAPHQL_ENDPOINT_HEADER, GRAPHQL_URL, QUERY_GET_DEPARTURES
+from .const import DIGITRAFFIC_USER, GRAPHQL_ENDPOINT_VALUE, GRAPHQL_URL, GRAPHQL_USER_HEADER, QUERY_GET_DEPARTURES
 
 
 class FintrafficApiError(Exception):
@@ -31,7 +31,8 @@ class FintrafficApiClient:
         headers = {
             "accept": "application/json",
             "content-type": "application/json",
-            "graphql-endpoint": GRAPHQL_ENDPOINT_HEADER,
+            "graphql-endpoint": GRAPHQL_ENDPOINT_VALUE,
+            GRAPHQL_USER_HEADER: DIGITRAFFIC_USER,
         }
 
         try:

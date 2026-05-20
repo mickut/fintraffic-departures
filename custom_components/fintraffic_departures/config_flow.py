@@ -12,8 +12,10 @@ from .const import (
     CONF_CUTOFF_MINUTES,
     CONF_NUMBER_OF_DEPARTURES,
     CONF_STOP_IDS,
+    CONF_UPDATE_INTERVAL_MINUTES,
     DEFAULT_CUTOFF_MINUTES,
     DEFAULT_NUMBER_OF_DEPARTURES,
+    DEFAULT_UPDATE_INTERVAL_MINUTES,
     DOMAIN,
 )
 
@@ -32,6 +34,7 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             stop_ids = _parse_stop_ids(user_input[CONF_STOP_IDS])
             number_of_departures = user_input[CONF_NUMBER_OF_DEPARTURES]
             cutoff_minutes = user_input[CONF_CUTOFF_MINUTES]
+            update_interval_minutes = user_input[CONF_UPDATE_INTERVAL_MINUTES]
 
             if not stop_ids:
                 errors[CONF_STOP_IDS] = "invalid_stop_ids"
@@ -39,9 +42,12 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors[CONF_NUMBER_OF_DEPARTURES] = "invalid_departure_count"
             elif cutoff_minutes < 0:
                 errors[CONF_CUTOFF_MINUTES] = "invalid_cutoff_minutes"
+            elif update_interval_minutes < 1:
+                errors[CONF_UPDATE_INTERVAL_MINUTES] = "invalid_update_interval_minutes"
             else:
                 await self.async_set_unique_id(
-                    "|".join(stop_ids) + f":{number_of_departures}:{cutoff_minutes}"
+                    "|".join(stop_ids)
+                    + f":{number_of_departures}:{cutoff_minutes}:{update_interval_minutes}"
                 )
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
@@ -50,6 +56,7 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_STOP_IDS: stop_ids,
                         CONF_NUMBER_OF_DEPARTURES: number_of_departures,
                         CONF_CUTOFF_MINUTES: cutoff_minutes,
+                        CONF_UPDATE_INTERVAL_MINUTES: update_interval_minutes,
                     },
                 )
 
@@ -64,6 +71,10 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_CUTOFF_MINUTES,
                     default=DEFAULT_CUTOFF_MINUTES,
                 ): vol.All(vol.Coerce(int), vol.Range(min=0, max=180)),
+                vol.Required(
+                    CONF_UPDATE_INTERVAL_MINUTES,
+                    default=DEFAULT_UPDATE_INTERVAL_MINUTES,
+                ): vol.All(vol.Coerce(int), vol.Range(min=1, max=1440)),
             }
         )
 

@@ -3,18 +3,20 @@
     "step": {
       "user": {
         "title": "Fintraffic avgångar",
-        "description": "Ange en eller flera GTFS-hållplats-id:n och hur många kommande avgångar som ska visas.",
+        "description": "Ange en eller flera GTFS-hållplats-id:n och uppdateringsintervall.",
         "data": {
           "stop_ids": "Hållplats-id:n (kommaseparerade)",
           "number_of_departures": "Antal avgångar",
-          "cutoff_minutes": "Gräns i minuter"
+          "cutoff_minutes": "Gräns i minuter",
+          "update_interval_minutes": "API-uppdateringsintervall i minuter"
         }
       }
     },
     "error": {
       "invalid_stop_ids": "Ange minst ett hållplats-id.",
       "invalid_departure_count": "Antalet avgångar måste vara minst 1.",
-      "invalid_cutoff_minutes": "Gränsen i minuter kan inte vara negativ."
+      "invalid_cutoff_minutes": "Gränsen i minuter kan inte vara negativ.",
+      "invalid_update_interval_minutes": "Uppdateringsintervallet måste vara minst 1 minut."
     },
     "abort": {
       "already_configured": "Den här konfigurationen finns redan."

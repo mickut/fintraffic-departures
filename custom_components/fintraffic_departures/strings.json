@@ -3,18 +3,20 @@
     "step": {
       "user": {
         "title": "Fintraffic Departures",
-        "description": "Configure one or more GTFS stop ids and how many upcoming departures to expose.",
+        "description": "Configure one or more GTFS stop ids and the polling interval.",
         "data": {
           "stop_ids": "Stop ids (comma-separated)",
           "number_of_departures": "Number of departures",
-          "cutoff_minutes": "Cutoff minutes"
+          "cutoff_minutes": "Cutoff minutes",
+          "update_interval_minutes": "API update interval in minutes"
         }
       }
     },
     "error": {
       "invalid_stop_ids": "Enter at least one stop id.",
       "invalid_departure_count": "Number of departures must be at least 1.",
-      "invalid_cutoff_minutes": "Cutoff minutes cannot be negative."
+      "invalid_cutoff_minutes": "Cutoff minutes cannot be negative.",
+      "invalid_update_interval_minutes": "Update interval must be at least 1 minute."
     },
     "abort": {
       "already_configured": "This configuration already exists."
