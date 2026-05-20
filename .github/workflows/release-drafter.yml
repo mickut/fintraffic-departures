@@ -4,11 +4,12 @@ on:
     push:
         branches:
             - main
-    pull_request_target:
+    pull_request:
         types:
             - opened
             - reopened
             - synchronize
+            - edited
             - closed
 
 permissions:
@@ -21,6 +22,6 @@ jobs:
 
         steps:
             - name: Update release draft
-              uses: release-drafter/release-drafter@v6
+              uses: release-drafter/release-drafter@v7.3.0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
