@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Fintraffic lähdöt",
+        "description": "Määritä yksi tai useampi GTFS-pysäkkitunnus sekä näytettävien tulevien lähtöjen määrä.",
+        "data": {
+          "stop_ids": "Pysäkkitunnukset (pilkulla eroteltuna)",
+          "number_of_departures": "Lähtöjen määrä",
+          "cutoff_minutes": "Rajaus minuutteina"
+        }
+      }
+    },
+    "error": {
+      "invalid_stop_ids": "Anna vähintään yksi pysäkkitunnus.",
+      "invalid_departure_count": "Lähtöjen määrän on oltava vähintään 1.",
+      "invalid_cutoff_minutes": "Rajaus minuutteina ei voi olla negatiivinen."
+    },
+    "abort": {
+      "already_configured": "Tämä määritys on jo olemassa."
+    }
+  }
+}

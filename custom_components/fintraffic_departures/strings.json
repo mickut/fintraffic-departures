@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Fintraffic Departures",
+        "description": "Configure one or more GTFS stop ids and how many upcoming departures to expose.",
+        "data": {
+          "stop_ids": "Stop ids (comma-separated)",
+          "number_of_departures": "Number of departures",
+          "cutoff_minutes": "Cutoff minutes"
+        }
+      }
+    },
+    "error": {
+      "invalid_stop_ids": "Enter at least one stop id.",
+      "invalid_departure_count": "Number of departures must be at least 1.",
+      "invalid_cutoff_minutes": "Cutoff minutes cannot be negative."
+    },
+    "abort": {
+      "already_configured": "This configuration already exists."
+    }
+  }
+}

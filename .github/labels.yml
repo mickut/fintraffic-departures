@@ -1,0 +1,39 @@
+- name: feature
+  color: "0e8a16"
+  description: New user-facing functionality.
+
+- name: enhancement
+  color: "84b6eb"
+  description: Improvement to existing functionality.
+
+- name: fix
+  color: "d73a4a"
+  description: Bug fix or regression fix.
+
+- name: bugfix
+  color: "b60205"
+  description: Specific bug fix label.
+
+- name: bug
+  color: "d73a4a"
+  description: Something is not working as expected.
+
+- name: documentation
+  color: "0075ca"
+  description: Documentation-only changes.
+
+- name: chore
+  color: "cfd3d7"
+  description: Maintenance and repository upkeep.
+
+- name: dependencies
+  color: "5319e7"
+  description: Dependency or automation updates.
+
+- name: major
+  color: "b60205"
+  description: Breaking change or major release trigger.
+
+- name: skip-changelog
+  color: "ffffff"
+  description: Exclude this pull request from release notes.

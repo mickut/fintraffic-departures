@@ -1,0 +1,403 @@
+HTTP/1.1 200 OK
+Date: Wed, 20 May 2026 07:43:35 GMT
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: close
+etag: W/"1937-L6rpILTzYll8nrK03tQ7xmJOq7U"
+x-powered-by: Express
+cf-cache-status: DYNAMIC
+Content-Encoding: gzip
+Server: cloudflare
+CF-RAY: 9fe9b6195ba9d088-HEL
+
+{
+  "data": {
+    "stops": [
+      {
+        "gtfsId": "MATKA:357184",
+        "name": "Nummela th E",
+        "alerts": [],
+        "stoptimesForPatterns": [
+          {
+            "pattern": {
+              "code": "MATKA:41591::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": null,
+                "longName": "Marttila - Karkkila - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 28260,
+                "realtimeDeparture": 28260,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:331545::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "U285",
+                "longName": "Karkkila - Vihti - Nummela - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 28860,
+                "realtimeDeparture": 28860,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 20760,
+                "realtimeDeparture": 20760,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:265202::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": null,
+                "longName": "Karkkila - Nummela - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 50460,
+                "realtimeDeparture": 50460,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:41587::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "280",
+                "longName": "Karkkila - Nummela - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 41460,
+                "realtimeDeparture": 41460,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:235149::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "OB2",
+                "longName": "Pori - Forssa - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 35820,
+                "realtimeDeparture": 35820,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 68520,
+                "realtimeDeparture": 68520,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 55020,
+                "realtimeDeparture": 55020,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 46320,
+                "realtimeDeparture": 46320,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:331540::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "U280",
+                "longName": "Nummela - Veikkola - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 49860,
+                "realtimeDeparture": 49860,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 46260,
+                "realtimeDeparture": 46260,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 42660,
+                "realtimeDeparture": 42660,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 39660,
+                "realtimeDeparture": 39660,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:41589::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": null,
+                "longName": "Forssa - Karkkila - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 32760,
+                "realtimeDeparture": 32760,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:331542::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "U280A",
+                "longName": "Kalkkimäki - Nummela - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 17460,
+                "realtimeDeparture": 17460,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 82860,
+                "realtimeDeparture": 82860,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 78060,
+                "realtimeDeparture": 78060,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 73860,
+                "realtimeDeparture": 73860,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:331544::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "U282B",
+                "longName": "Lohja - Nummela - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 69360,
+                "realtimeDeparture": 69360,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:271340::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "OB21",
+                "longName": "Forssa - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 43500,
+                "realtimeDeparture": 43500,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:196276::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "285X",
+                "longName": "Karkkila - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 21780,
+                "realtimeDeparture": 21780,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:196274::01",
+              "headsign": "Leppävaara",
+              "route": {
+                "shortName": "275",
+                "longName": "Kalkkimäki - Nummela - Veikkola - Leppävaara",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 55560,
+                "realtimeDeparture": 55560,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 51960,
+                "realtimeDeparture": 51960,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 48360,
+                "realtimeDeparture": 48360,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              },
+              {
+                "serviceDay": 1779224400,
+                "scheduledDeparture": 44760,
+                "realtimeDeparture": 44760,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          },
+          {
+            "pattern": {
+              "code": "MATKA:41588::01",
+              "headsign": "Helsinki",
+              "route": {
+                "shortName": "280",
+                "longName": "Lohja - Nummela - Helsinki",
+                "__typename": "Route"
+              },
+              "__typename": "Pattern"
+            },
+            "stoptimes": [
+              {
+                "serviceDay": 1779310800,
+                "scheduledDeparture": 37860,
+                "realtimeDeparture": 37860,
+                "realtimeState": "SCHEDULED",
+                "__typename": "Stoptime"
+              }
+            ],
+            "__typename": "StoptimesInPattern"
+          }
+        ],
+        "__typename": "Stop"
+      }
+    ]
+  }
+}

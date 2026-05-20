@@ -1,0 +1,50 @@
+name: Validate
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Validate JSON metadata
+              run: |
+                  python - <<'PY'
+                  import json
+                  from pathlib import Path
+
+                  root = Path('.')
+                  files = [
+                      root / 'hacs.json',
+                      root / 'custom_components' / 'fintraffic_departures' / 'manifest.json',
+                      root / 'custom_components' / 'fintraffic_departures' / 'strings.json',
+                  ]
+
+                  for file_path in files:
+                      with file_path.open('r', encoding='utf-8') as handle:
+                          json.load(handle)
+
+                  manifest = json.loads((root / 'custom_components' / 'fintraffic_departures' / 'manifest.json').read_text(encoding='utf-8'))
+                  assert manifest['domain'] == 'fintraffic_departures'
+                  assert manifest['config_flow'] is True
+                  assert isinstance(manifest['version'], str) and manifest['version']
+                  print('Metadata validation passed.')
+                  PY
+
+            - name: Compile Python sources
+              run: python -m compileall custom_components

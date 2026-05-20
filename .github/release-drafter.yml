@@ -1,0 +1,66 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+template: |
+  ## Changes
+
+  $CHANGES
+
+  ## Installation
+
+  - HACS users can update directly from Home Assistant.
+  - Manual installs should replace `custom_components/fintraffic_departures` with the contents of the attached archive.
+
+categories:
+  - title: Features
+    labels:
+      - feature
+      - enhancement
+  - title: Fixes
+    labels:
+      - fix
+      - bugfix
+      - bug
+  - title: Maintenance
+    labels:
+      - chore
+      - dependencies
+      - documentation
+
+change-template: "- $TITLE (#$NUMBER)"
+change-title-escapes: '\<*_&'
+no-changes-template: "- No user-facing changes in this release."
+version-resolver:
+  major:
+    labels:
+      - major
+  minor:
+    labels:
+      - feature
+      - enhancement
+  patch:
+    labels:
+      - fix
+      - bugfix
+      - bug
+      - chore
+      - documentation
+      - dependencies
+  default: patch
+autolabeler:
+  - label: documentation
+    files:
+      - "*.md"
+      - "README.md"
+  - label: dependencies
+    files:
+      - ".github/workflows/**"
+  - label: feature
+    branch:
+      - "^feature/.+"
+      - "^feat/.+"
+  - label: fix
+    branch:
+      - "^fix/.+"
+      - "^bugfix/.+"
+exclude-labels:
+  - skip-changelog
