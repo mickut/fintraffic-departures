@@ -13,8 +13,9 @@ Home Assistant custom integration for upcoming departures from the Fintraffic Di
 
 ## Features
 
-- Config flow setup for one or more GTFS stop ids, with REST-based stop name lookup
-- One sensor per configured stop
+- Shared config entry for departure settings, plus one stop subentry per configured stop
+- One stop-specific sensor per configured stop
+- Stop setup by REST-based name lookup or manual GTFS id entry
 - Configurable API polling interval with a default of 15 minutes
 - Sensor values and attributes recalculated every minute from the latest retrieved data
 - Internal `Digitraffic-User` request header for API identification
@@ -44,17 +45,20 @@ Home Assistant custom integration for upcoming departures from the Fintraffic Di
 
 ## Configuration
 
-The config flow asks for:
+The main config flow asks for:
 
-- `stop_lookup_query`: optional stop-name search text for finding ids from the REST geocoding API
-- `stop_ids`: comma-separated GTFS ids such as `MATKA:357184`
 - `number_of_departures`: how many departures to retain after sorting and filtering
 - `cutoff_minutes`: exclude departures that are in the past or within this many minutes from now
 - `update_interval_minutes`: API polling interval for refreshing departures, default `15`
 
-The integration sends a built-in `Digitraffic-User` header for API identification and does not require that value during setup.
+After the main entry is created, Home Assistant opens a stop subentry flow for the first stop. Additional stops can be added later from the integration page.
 
-If `stop_ids` is left empty and a `stop_lookup_query` is provided, the integration searches the Fintraffic geocoding endpoint and lets you select matching stops before creating the config entry.
+Each stop can be added in one of two ways:
+
+- Search by stop name using the Fintraffic geocoding endpoint and select one matching stop
+- Enter the stop GTFS id manually, for example `MATKA:357184`
+
+The integration sends a built-in `Digitraffic-User` header for API identification and does not require that value during setup.
 
 ## Sensor behavior
 

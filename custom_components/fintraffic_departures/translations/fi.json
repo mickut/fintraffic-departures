@@ -3,33 +3,48 @@
     "step": {
       "user": {
         "title": "Fintraffic lähdöt",
-        "description": "Syötä GTFS-pysäkkitunnukset suoraan tai hae pysäkkejä nimellä ja määritä sitten päivitysväli.",
+        "description": "Määritä yhteiset lähtöasetukset. Voit lisätä pysäkit tämän vaiheen jälkeen.",
         "data": {
-          "stop_lookup_query": "Pysäkkihaku",
-          "stop_ids": "Pysäkkitunnukset (pilkulla eroteltuna)",
           "number_of_departures": "Lähtöjen määrä",
           "cutoff_minutes": "Rajaus minuutteina",
           "update_interval_minutes": "API-päivitysväli minuutteina"
         }
-      },
-      "select_stops": {
-        "title": "Valitse pysäkit",
-        "description": "Valitse yksi tai useampi pysäkki hakutuloksista.",
-        "data": {
-          "selected_stop_ids": "Hakua vastaavat pysäkit"
-        }
       }
     },
     "error": {
-      "invalid_stop_ids": "Anna vähintään yksi pysäkkitunnus.",
       "invalid_departure_count": "Lähtöjen määrän on oltava vähintään 1.",
       "invalid_cutoff_minutes": "Rajaus minuutteina ei voi olla negatiivinen.",
-      "invalid_update_interval_minutes": "Päivitysvälin on oltava vähintään 1 minuutti.",
-      "lookup_failed": "Pysäkkihaku epäonnistui. Yritä myöhemmin uudelleen.",
-      "no_search_results": "Hakua vastaavia pysäkkejä ei löytynyt."
-    },
-    "abort": {
-      "already_configured": "Tämä määritys on jo olemassa."
+      "invalid_update_interval_minutes": "Päivitysvälin on oltava vähintään 1 minuutti."
+    }
+  },
+  "config_subentries": {
+    "stop": {
+      "title": "Pysäkki",
+      "step": {
+        "user": {
+          "title": "Lisää pysäkki",
+          "description": "Syötä GTFS-pysäkkitunnus käsin tai hae pysäkkiä nimellä.",
+          "data": {
+            "stop_lookup_query": "Pysäkkihaku",
+            "stop_id": "Pysäkin GTFS-tunnus"
+          }
+        },
+        "select_stop": {
+          "title": "Valitse pysäkki",
+          "description": "Valitse pysäkki hakutuloksista.",
+          "data": {
+            "stop_id": "Hakua vastaava pysäkki"
+          }
+        }
+      },
+      "error": {
+        "invalid_stop_id": "Anna pysäkkitunnus tai pysäkkihaku.",
+        "lookup_failed": "Pysäkkihaku epäonnistui. Yritä myöhemmin uudelleen.",
+        "no_search_results": "Hakua vastaavia pysäkkejä ei löytynyt."
+      },
+      "abort": {
+        "already_configured": "Tämä pysäkki on jo määritetty."
+      }
     }
   }
 }

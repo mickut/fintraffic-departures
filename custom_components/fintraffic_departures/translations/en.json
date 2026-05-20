@@ -3,33 +3,48 @@
     "step": {
       "user": {
         "title": "Fintraffic Departures",
-        "description": "Enter GTFS stop ids directly or search for stops by name, then configure the polling interval.",
+        "description": "Configure the shared departure settings. You can add stops after this step.",
         "data": {
-          "stop_lookup_query": "Stop search query",
-          "stop_ids": "Stop ids (comma-separated)",
           "number_of_departures": "Number of departures",
           "cutoff_minutes": "Cutoff minutes",
           "update_interval_minutes": "API update interval in minutes"
         }
-      },
-      "select_stops": {
-        "title": "Select stops",
-        "description": "Choose one or more stops from the search results.",
-        "data": {
-          "selected_stop_ids": "Matching stops"
-        }
       }
     },
     "error": {
-      "invalid_stop_ids": "Enter at least one stop id.",
       "invalid_departure_count": "Number of departures must be at least 1.",
       "invalid_cutoff_minutes": "Cutoff minutes cannot be negative.",
-      "invalid_update_interval_minutes": "Update interval must be at least 1 minute.",
-      "lookup_failed": "Stop lookup failed. Try again later.",
-      "no_search_results": "No matching stops were found."
-    },
-    "abort": {
-      "already_configured": "This configuration already exists."
+      "invalid_update_interval_minutes": "Update interval must be at least 1 minute."
+    }
+  },
+  "config_subentries": {
+    "stop": {
+      "title": "Stop",
+      "step": {
+        "user": {
+          "title": "Add stop",
+          "description": "Enter a GTFS stop id manually or search for a stop by name.",
+          "data": {
+            "stop_lookup_query": "Stop search query",
+            "stop_id": "Stop GTFS id"
+          }
+        },
+        "select_stop": {
+          "title": "Select stop",
+          "description": "Choose a stop from the search results.",
+          "data": {
+            "stop_id": "Matching stop"
+          }
+        }
+      },
+      "error": {
+        "invalid_stop_id": "Enter a stop id or a stop search query.",
+        "lookup_failed": "Stop lookup failed. Try again later.",
+        "no_search_results": "No matching stops were found."
+      },
+      "abort": {
+        "already_configured": "This stop is already configured."
+      }
     }
   }
 }

@@ -15,10 +15,11 @@ from .const import (
     COORDINATOR_UPDATE_INTERVAL,
     CONF_CUTOFF_MINUTES,
     CONF_NUMBER_OF_DEPARTURES,
-    CONF_STOP_IDS,
+    CONF_STOP_ID,
     CONF_UPDATE_INTERVAL_MINUTES,
     DEFAULT_UPDATE_INTERVAL_MINUTES,
     DOMAIN,
+    SUBENTRY_TYPE_STOP,
 )
 from .models import AlertInfo, DepartureInfo, StopData
 
@@ -58,13 +59,21 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
 
     async def _async_update_data(self) -> dict[str, StopData]:
         now = datetime.now(UTC)
-        stop_ids: list[str] = list(self.entry.data[CONF_STOP_IDS])
+        stop_ids = [
+            subentry.data[CONF_STOP_ID]
+            for subentry in self.entry.subentries.values()
+            if subentry.subentry_type == SUBENTRY_TYPE_STOP and subentry.data.get(CONF_STOP_ID)
+        ]
         number_of_departures: int = self.entry.data[CONF_NUMBER_OF_DEPARTURES]
         cutoff_minutes: int = self.entry.data[CONF_CUTOFF_MINUTES]
         api_update_interval_minutes: int = self.entry.data.get(
             CONF_UPDATE_INTERVAL_MINUTES,
             DEFAULT_UPDATE_INTERVAL_MINUTES,
         )
+
+        if not stop_ids:
+            self._cached_stops = []
+            return {}
 
         refresh_due = (
             self._cached_stops is None
@@ -117,7 +126,7 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
                 alerts=alerts,
             )
 
-        for configured_stop_id in self.entry.data[CONF_STOP_IDS]:
+        for configured_stop_id in stop_ids:
             normalized.setdefault(
                 configured_stop_id,
                 StopData(

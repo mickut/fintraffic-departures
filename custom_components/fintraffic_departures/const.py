@@ -6,12 +6,12 @@ from pathlib import Path
 
 DOMAIN = "fintraffic_departures"
 
-CONF_STOP_IDS = "stop_ids"
+CONF_STOP_ID = "stop_id"
 CONF_STOP_LOOKUP_QUERY = "stop_lookup_query"
-CONF_SELECTED_STOP_IDS = "selected_stop_ids"
 CONF_NUMBER_OF_DEPARTURES = "number_of_departures"
 CONF_CUTOFF_MINUTES = "cutoff_minutes"
 CONF_UPDATE_INTERVAL_MINUTES = "update_interval_minutes"
+SUBENTRY_TYPE_STOP = "stop"
 
 DEFAULT_NUMBER_OF_DEPARTURES = 4
 DEFAULT_CUTOFF_MINUTES = 0
