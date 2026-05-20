@@ -53,6 +53,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 if not isinstance(old_stop_id, str):
                     continue
 
+                raw_stop_id = old_stop_id.strip()
                 normalized_stop_id = normalize_stop_id(old_stop_id)
                 subentry = ConfigSubentry(
                     data=MappingProxyType({CONF_STOP_ID: normalized_stop_id}),
@@ -60,6 +61,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     title=normalized_stop_id,
                     unique_id=normalized_stop_id,
                 )
+                old_to_new_subentry_id[f"{entry.entry_id}_{raw_stop_id}"] = subentry.subentry_id
                 old_to_new_subentry_id[f"{entry.entry_id}_{normalized_stop_id}"] = subentry.subentry_id
                 hass.config_entries.async_add_subentry(entry, subentry)
 
