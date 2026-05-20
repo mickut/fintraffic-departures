@@ -93,11 +93,17 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
                     raise UpdateFailed(str(err)) from err
                 LOGGER.warning("API refresh failed, reusing cached departures: %s", err)
 
-        return self._normalize_stops(self._cached_stops or [], number_of_departures, cutoff_minutes)
+        return self._normalize_stops(
+            self._cached_stops or [],
+            stop_ids,
+            number_of_departures,
+            cutoff_minutes,
+        )
 
     def _normalize_stops(
         self,
         stops: list[dict[str, Any]],
+        configured_stop_ids: list[str],
         number_of_departures: int,
         cutoff_minutes: int,
     ) -> dict[str, StopData]:
@@ -126,7 +132,7 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
                 alerts=alerts,
             )
 
-        for configured_stop_id in stop_ids:
+        for configured_stop_id in configured_stop_ids:
             normalized.setdefault(
                 configured_stop_id,
                 StopData(
