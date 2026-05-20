@@ -3,9 +3,8 @@
     "step": {
       "user": {
         "title": "Fintraffic avgångar",
-        "description": "Ange en eller flera GTFS-hållplats-id:n och uppdateringsintervall.",
+        "description": "Konfigurera de gemensamma avgångsinställningarna. Du kan lägga till hållplatser efter detta steg.",
         "data": {
-          "stop_ids": "Hållplats-id:n (kommaseparerade)",
           "number_of_departures": "Antal avgångar",
           "cutoff_minutes": "Gräns i minuter",
           "update_interval_minutes": "API-uppdateringsintervall i minuter"
@@ -13,13 +12,39 @@
       }
     },
     "error": {
-      "invalid_stop_ids": "Ange minst ett hållplats-id.",
       "invalid_departure_count": "Antalet avgångar måste vara minst 1.",
       "invalid_cutoff_minutes": "Gränsen i minuter kan inte vara negativ.",
       "invalid_update_interval_minutes": "Uppdateringsintervallet måste vara minst 1 minut."
-    },
-    "abort": {
-      "already_configured": "Den här konfigurationen finns redan."
+    }
+  },
+  "config_subentries": {
+    "stop": {
+      "title": "Hållplats",
+      "step": {
+        "user": {
+          "title": "Lägg till hållplats",
+          "description": "Ange ett GTFS-hållplats-id manuellt eller sök efter en hållplats med namn.",
+          "data": {
+            "stop_lookup_query": "Hållplatssökning",
+            "stop_id": "Hållplatsens GTFS-id"
+          }
+        },
+        "select_stop": {
+          "title": "Välj hållplats",
+          "description": "Välj en hållplats från sökresultaten.",
+          "data": {
+            "stop_id": "Matchande hållplats"
+          }
+        }
+      },
+      "error": {
+        "invalid_stop_id": "Ange ett hållplats-id eller en hållplatssökning.",
+        "lookup_failed": "Hållplatssökningen misslyckades. Försök igen senare.",
+        "no_search_results": "Inga matchande hållplatser hittades."
+      },
+      "abort": {
+        "already_configured": "Den här hållplatsen är redan konfigurerad."
+      }
     }
   }
 }

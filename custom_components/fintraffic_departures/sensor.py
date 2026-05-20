@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, ConfigSubentry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
@@ -14,8 +14,9 @@ from .const import (
     ATTR_PRIMARY_DEPARTURE,
     ATTR_STOP_ID,
     ATTR_STOP_NAME,
-    CONF_STOP_IDS,
+    CONF_STOP_ID,
     DOMAIN,
+    SUBENTRY_TYPE_STOP,
 )
 from .coordinator import FintrafficDeparturesCoordinator
 from .models import StopData
@@ -24,14 +25,17 @@ from .models import StopData
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     coordinator: FintrafficDeparturesCoordinator = hass.data[DOMAIN][entry.entry_id]
-    stop_ids: list[str] = list(entry.data[CONF_STOP_IDS])
 
-    async_add_entities(
-        FintrafficDepartureSensor(coordinator, entry, stop_id) for stop_id in stop_ids
-    )
+    for subentry_id, subentry in entry.subentries.items():
+        if subentry.subentry_type != SUBENTRY_TYPE_STOP:
+            continue
+        async_add_entities(
+            [FintrafficDepartureSensor(coordinator, entry, subentry)],
+            config_subentry_id=subentry_id,
+        )
 
 
 class FintrafficDepartureSensor(CoordinatorEntity[FintrafficDeparturesCoordinator], SensorEntity):
@@ -42,12 +46,13 @@ class FintrafficDepartureSensor(CoordinatorEntity[FintrafficDeparturesCoordinato
         self,
         coordinator: FintrafficDeparturesCoordinator,
         entry: ConfigEntry,
-        stop_id: str,
+        subentry: ConfigSubentry,
     ) -> None:
         super().__init__(coordinator)
         self._entry = entry
-        self._stop_id = stop_id
-        self._attr_unique_id = f"{entry.entry_id}_{stop_id}"
+        self._subentry = subentry
+        self._stop_id = subentry.data[CONF_STOP_ID]
+        self._attr_unique_id = f"{entry.entry_id}_{subentry.subentry_id}"
 
     @property
     def name(self) -> str:

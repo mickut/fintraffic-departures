@@ -1,7 +1,7 @@
 {
   "domain": "fintraffic_departures",
   "name": "Fintraffic Departures",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "documentation": "https://github.com/mickut/fintraffic-departures",
   "issue_tracker": "https://github.com/mickut/fintraffic-departures/issues",
   "config_flow": true,
