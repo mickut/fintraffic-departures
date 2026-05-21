@@ -1,3 +1,4 @@
+![resources/logo.svg](resources/logo.svg)
 # Transit Departures Finland
 
 [![GitHub Release][releases-shield]][releases]
