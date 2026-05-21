@@ -1,7 +1,7 @@
 {
   "domain": "transit_departures",
   "name": "Transit Departures Finland",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "documentation": "https://github.com/mickut/ha-transit-departures",
   "issue_tracker": "https://github.com/mickut/ha-transit-departures/issues",
   "config_flow": true,
