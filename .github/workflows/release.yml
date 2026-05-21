@@ -29,7 +29,7 @@ jobs:
                   import os
                   from pathlib import Path
 
-                  manifest = json.loads(Path('custom_components/fintraffic_departures/manifest.json').read_text(encoding='utf-8'))
+                  manifest = json.loads(Path('custom_components/transit_departures/manifest.json').read_text(encoding='utf-8'))
                   tag = os.environ['GITHUB_REF_NAME']
                   expected = tag.removeprefix('v')
                   actual = manifest['version']
@@ -47,8 +47,8 @@ jobs:
                   from zipfile import ZIP_DEFLATED, ZipFile
 
                   root = Path('.')
-                  source_root = root / 'custom_components' / 'fintraffic_departures'
-                  archive_path = root / 'fintraffic_departures.zip'
+                  source_root = root / 'custom_components' / 'transit_departures'
+                  archive_path = root / 'transit_departures.zip'
 
                   with ZipFile(archive_path, 'w', compression=ZIP_DEFLATED) as archive:
                       for file_path in source_root.rglob('*'):
@@ -63,4 +63,4 @@ jobs:
               uses: softprops/action-gh-release@v2
               with:
                   generate_release_notes: true
-                  files: fintraffic_departures.zip
+                  files: transit_departures.zip

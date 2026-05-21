@@ -19,8 +19,8 @@ from .const import (
 )
 
 
-class FintrafficApiError(Exception):
-    """Raised when the Fintraffic API request fails."""
+class TransitApiError(Exception):
+    """Raised when the transit API request fails."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -29,7 +29,7 @@ class StopSearchResult:
     label: str
 
 
-class FintrafficApiClient:
+class TransitApiClient:
     def __init__(self, session: ClientSession) -> None:
         self._session = session
 
@@ -54,13 +54,13 @@ class FintrafficApiClient:
             response.raise_for_status()
             response_json = await response.json()
         except ClientError as err:
-            raise FintrafficApiError(f"Search request failed: {err}") from err
+            raise TransitApiError(f"Search request failed: {err}") from err
         except ValueError as err:
-            raise FintrafficApiError("Search response was not valid JSON") from err
+            raise TransitApiError("Search response was not valid JSON") from err
 
         features = response_json.get("features")
         if not isinstance(features, list):
-            raise FintrafficApiError("Search response did not contain a features array")
+            raise TransitApiError("Search response did not contain a features array")
 
         results: list[StopSearchResult] = []
         seen_stop_ids: set[str] = set()
@@ -105,20 +105,20 @@ class FintrafficApiClient:
             response.raise_for_status()
             response_json = await response.json()
         except ClientError as err:
-            raise FintrafficApiError(f"Request failed: {err}") from err
+            raise TransitApiError(f"Request failed: {err}") from err
         except ValueError as err:
-            raise FintrafficApiError("Response was not valid JSON") from err
+            raise TransitApiError("Response was not valid JSON") from err
 
         errors = response_json.get("errors")
         if errors:
-            raise FintrafficApiError(f"GraphQL errors returned: {errors}")
+            raise TransitApiError(f"GraphQL errors returned: {errors}")
 
         data = response_json.get("data")
         if not isinstance(data, dict):
-            raise FintrafficApiError("Response did not contain a data object")
+            raise TransitApiError("Response did not contain a data object")
 
         stops = data.get("stops")
         if not isinstance(stops, list):
-            raise FintrafficApiError("Response did not contain a stops array")
+            raise TransitApiError("Response did not contain a stops array")
 
         return stops

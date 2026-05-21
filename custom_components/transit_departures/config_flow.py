@@ -20,7 +20,7 @@ from homeassistant.core import callback
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import FintrafficApiClient, FintrafficApiError
+from .api import TransitApiClient, TransitApiError
 
 from .const import (
     CONF_CUTOFF_MINUTES,
@@ -66,7 +66,7 @@ def _decode_stop_selection(value: str) -> tuple[str, str] | None:
     return normalized_stop_id, title.strip() or normalized_stop_id
 
 
-class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class TransitDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
     MINOR_VERSION = 2
 
@@ -76,7 +76,7 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         cls, config_entry: ConfigEntry
     ) -> dict[str, type[ConfigSubentryFlow]]:
         """Return supported stop subentries."""
-        return {SUBENTRY_TYPE_STOP: FintrafficStopSubentryFlowHandler}
+        return {SUBENTRY_TYPE_STOP: TransitStopSubentryFlowHandler}
 
     async def async_step_user(
         self, user_input: Mapping[str, Any] | None = None
@@ -96,7 +96,7 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors[CONF_UPDATE_INTERVAL_MINUTES] = "invalid_update_interval_minutes"
             else:
                 return self.async_create_entry(
-                    title="Fintraffic Departures",
+                    title="Transit Departures Finland",
                     data={
                         CONF_NUMBER_OF_DEPARTURES: number_of_departures,
                         CONF_CUTOFF_MINUTES: cutoff_minutes,
@@ -136,11 +136,20 @@ class FintrafficDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return result
 
 
-class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
+class TransitStopSubentryFlowHandler(ConfigSubentryFlow):
     """Handle stop subentries."""
 
     def __init__(self) -> None:
         self._search_results: list[dict[str, str]] = []
+
+    @staticmethod
+    def _user_schema() -> vol.Schema:
+        return vol.Schema(
+            {
+                vol.Optional(CONF_STOP_LOOKUP_QUERY, default=""): str,
+                vol.Optional(CONF_STOP_ID, default=""): str,
+            }
+        )
 
     async def async_step_user(
         self, user_input: Mapping[str, Any] | None = None
@@ -155,9 +164,9 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
                 return await self._async_create_stop_subentry(stop_id, stop_id)
             if lookup_query:
                 try:
-                    api = FintrafficApiClient(async_get_clientsession(self.hass))
+                    api = TransitApiClient(async_get_clientsession(self.hass))
                     search_results = await api.async_search_stops(lookup_query)
-                except FintrafficApiError:
+                except TransitApiError:
                     errors[CONF_STOP_LOOKUP_QUERY] = "lookup_failed"
                 else:
                     self._search_results = [
@@ -170,12 +179,7 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
             else:
                 errors[CONF_STOP_ID] = "invalid_stop_id"
 
-        schema = vol.Schema(
-            {
-                vol.Optional(CONF_STOP_LOOKUP_QUERY, default=""): str,
-                vol.Optional(CONF_STOP_ID, default=""): str,
-            }
-        )
+        schema = self._user_schema()
 
         return self.async_show_form(step_id="user", data_schema=schema, errors=errors)
 
@@ -201,8 +205,11 @@ class FintrafficStopSubentryFlowHandler(ConfigSubentryFlow):
                 return await self._async_create_stop_subentry(stop_id, title)
 
         if not options:
-            errors[CONF_STOP_LOOKUP_QUERY] = "no_search_results"
-            return await self.async_step_user()
+            return self.async_show_form(
+                step_id="user",
+                data_schema=self._user_schema(),
+                errors={CONF_STOP_LOOKUP_QUERY: "no_search_results"},
+            )
 
         schema = vol.Schema(
             {

@@ -8,7 +8,7 @@ template: |
   ## Installation
 
   - HACS users can update directly from Home Assistant.
-  - Manual installs should replace `custom_components/fintraffic_departures` with the contents of the attached archive.
+  - Manual installs should replace `custom_components/transit_departures` with the contents of the attached archive.
 
 categories:
   - title: Features

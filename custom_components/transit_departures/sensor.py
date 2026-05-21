@@ -18,7 +18,7 @@ from .const import (
     DOMAIN,
     SUBENTRY_TYPE_STOP,
 )
-from .coordinator import FintrafficDeparturesCoordinator
+from .coordinator import TransitDeparturesCoordinator
 from .models import StopData
 
 
@@ -27,24 +27,24 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator: FintrafficDeparturesCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator: TransitDeparturesCoordinator = hass.data[DOMAIN][entry.entry_id]
 
     for subentry_id, subentry in entry.subentries.items():
         if subentry.subentry_type != SUBENTRY_TYPE_STOP:
             continue
         async_add_entities(
-            [FintrafficDepartureSensor(coordinator, entry, subentry)],
+            [TransitDepartureSensor(coordinator, entry, subentry)],
             config_subentry_id=subentry_id,
         )
 
 
-class FintrafficDepartureSensor(CoordinatorEntity[FintrafficDeparturesCoordinator], SensorEntity):
+class TransitDepartureSensor(CoordinatorEntity[TransitDeparturesCoordinator], SensorEntity):
     _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.TIMESTAMP
 
     def __init__(
         self,
-        coordinator: FintrafficDeparturesCoordinator,
+        coordinator: TransitDeparturesCoordinator,
         entry: ConfigEntry,
         subentry: ConfigSubentry,
     ) -> None:

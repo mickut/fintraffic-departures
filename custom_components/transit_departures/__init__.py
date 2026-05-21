@@ -7,14 +7,14 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
-from .coordinator import FintrafficDeparturesCoordinator
+from .coordinator import TransitDeparturesCoordinator
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    coordinator = FintrafficDeparturesCoordinator(hass, entry)
+    coordinator = TransitDeparturesCoordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator

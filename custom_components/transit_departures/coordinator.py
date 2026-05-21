@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import FintrafficApiClient, FintrafficApiError
+from .api import TransitApiClient, TransitApiError
 from .const import (
     COORDINATOR_UPDATE_INTERVAL,
     CONF_CUTOFF_MINUTES,
@@ -44,7 +44,7 @@ def _service_day_midnight(service_day: int) -> datetime:
     return datetime.fromtimestamp(service_day, UTC).astimezone(HELSINKI_TIMEZONE)
 
 
-class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
+class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         super().__init__(
             hass,
@@ -53,7 +53,7 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
             update_interval=COORDINATOR_UPDATE_INTERVAL,
         )
         self.entry = entry
-        self.api = FintrafficApiClient(async_get_clientsession(hass))
+        self.api = TransitApiClient(async_get_clientsession(hass))
         self._cached_stops: list[dict[str, Any]] | None = None
         self._last_api_refresh: datetime | None = None
 
@@ -88,7 +88,7 @@ class FintrafficDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]
                     number_of_departures,
                 )
                 self._last_api_refresh = now
-            except FintrafficApiError as err:
+            except TransitApiError as err:
                 if self._cached_stops is None:
                     raise UpdateFailed(str(err)) from err
                 LOGGER.warning("API refresh failed, reusing cached departures: %s", err)
