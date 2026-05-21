@@ -4,7 +4,7 @@ import json
 from datetime import timedelta
 from pathlib import Path
 
-DOMAIN = "fintraffic_departures"
+DOMAIN = "transit_departures"
 
 CONF_STOP_ID = "stop_id"
 CONF_STOP_LOOKUP_QUERY = "stop_lookup_query"
@@ -60,7 +60,7 @@ def _load_integration_version() -> str:
   return "0.0.0"
 
 
-DIGITRAFFIC_USER = f"mickut/HACS-FintrafficDepartures {_load_integration_version()}"
+DIGITRAFFIC_USER = f"mickut/HACS-TransitDepartures {_load_integration_version()}"
 
 QUERY_GET_DEPARTURES = """
 query GetDeparturesForStops($ids: [String!]!, $numberOfDepartures: Int!) {

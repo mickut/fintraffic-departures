@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Fintraffic Departures",
+        "title": "Transit Departures Finland",
         "description": "Configure the shared departure settings. You can add stops after this step.",
         "data": {
           "number_of_departures": "Number of departures",

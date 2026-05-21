@@ -29,7 +29,7 @@ When a branch prefix maps cleanly to a label, prefer that prefix so automation a
 
 ## Version increments
 
-This repository uses semantic versioning in `custom_components/fintraffic_departures/manifest.json`.
+This repository uses semantic versioning in `custom_components/transit_departures/manifest.json`.
 
 - Increment the major version for breaking changes or PRs labeled `major`.
 - Increment the minor version for `feature` and `enhancement` changes.
@@ -41,7 +41,7 @@ These rules should stay aligned with `.github/release-drafter.yml`.
 
 - Do not bump the version number on every code change by default.
 - Bump the version only when explicitly preparing a release or when asked to do so.
-- When bumping the version, update `custom_components/fintraffic_departures/manifest.json` first.
+- When bumping the version, update `custom_components/transit_departures/manifest.json` first.
 - Release tags must match the manifest version and use the format `vX.Y.Z`.
 - If release metadata depends on the integration version, keep it consistent with the manifest version.
 
