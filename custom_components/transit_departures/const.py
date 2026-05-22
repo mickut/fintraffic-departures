@@ -43,7 +43,13 @@ ATTR_STOP_NAME = "stop_name"
 def normalize_stop_id(stop_id: str) -> str:
   normalized = stop_id.strip()
   if normalized.startswith("GTFS:"):
-    return normalized[5:]
+    normalized = normalized[5:]
+
+  # Some geocoding ids include an extra suffix like HSL:1040273#H1243.
+  # Transit GraphQL stop ids should use the canonical part before '#'.
+  if "#" in normalized:
+    normalized = normalized.split("#", 1)[0].strip()
+
   return normalized
 
 
