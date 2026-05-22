@@ -1,18 +1,25 @@
 name: Validate
 
 on:
-    pull_request:
     push:
-        branches:
-            - main
+    pull_request:
+    schedule:
+        - cron: "0 0 * * *"
+    workflow_dispatch:
 
-permissions:
-    contents: read
+permissions: {}
 
 jobs:
-    validate:
+    validate-hacs:
         runs-on: ubuntu-latest
+        steps:
+            - name: HACS validation
+              uses: hacs/action@main
+              with:
+                  category: integration
 
+    validate-python:
+        runs-on: ubuntu-latest
         steps:
             - name: Check out repository
               uses: actions/checkout@v4
@@ -20,7 +27,7 @@ jobs:
             - name: Set up Python
               uses: actions/setup-python@v5
               with:
-                  python-version: "3.12"
+                  python-version: "3.14"
 
             - name: Validate JSON metadata
               run: |
@@ -48,3 +55,22 @@ jobs:
 
             - name: Compile Python sources
               run: python -m compileall custom_components
+
+    unit-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.14"
+
+            - name: Install test dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install "homeassistant>=2026.5.0" "pytest>=8.2.0" "pytest-asyncio>=0.23.0" "pytest-socket>=0.7.0"
+
+            - name: Run unit tests
+              run: python -m pytest -o addopts=''
