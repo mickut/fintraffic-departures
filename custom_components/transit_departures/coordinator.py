@@ -119,6 +119,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
                 continue
 
             stop_name = stop.get("name") or stop_id
+            stop_code = stop.get("code") if isinstance(stop.get("code"), str) else None
             alerts = self._normalize_alerts(stop.get("alerts") or ())
             departures = self._normalize_departures(
                 stop_id=stop_id,
@@ -131,6 +132,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
             normalized[stop_id] = StopData(
                 stop_id=stop_id,
                 stop_name=stop_name,
+                stop_code=stop_code,
                 departures=departures,
                 alerts=alerts,
             )
@@ -141,6 +143,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
                 StopData(
                     stop_id=configured_stop_id,
                     stop_name=configured_stop_id,
+                    stop_code=None,
                     departures=(),
                     alerts=(),
                 ),

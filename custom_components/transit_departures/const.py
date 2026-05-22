@@ -11,11 +11,18 @@ CONF_STOP_LOOKUP_QUERY = "stop_lookup_query"
 CONF_NUMBER_OF_DEPARTURES = "number_of_departures"
 CONF_CUTOFF_MINUTES = "cutoff_minutes"
 CONF_UPDATE_INTERVAL_MINUTES = "update_interval_minutes"
+CONF_PREFIX = "prefix"
+CONF_SUFFIX = "suffix"
+CONF_STOP_SUFFIX = "stop_suffix"
+CONF_DISABLE_STOP_SUFFIX = "disable_stop_suffix"
 SUBENTRY_TYPE_STOP = "stop"
 
 DEFAULT_NUMBER_OF_DEPARTURES = 4
 DEFAULT_CUTOFF_MINUTES = 0
 DEFAULT_UPDATE_INTERVAL_MINUTES = 15
+DEFAULT_PREFIX = ""
+DEFAULT_SUFFIX = "Next Departure"
+DEFAULT_DISABLE_STOP_SUFFIX = False
 COORDINATOR_UPDATE_INTERVAL = timedelta(minutes=1)
 
 GRAPHQL_URL = "https://matkamonitori.digitransit.fi/api/graphql"
@@ -38,6 +45,7 @@ ATTR_NEXT_DEPARTURES = "next_departures"
 ATTR_ALERTS = "alerts"
 ATTR_STOP_ID = "stop_id"
 ATTR_STOP_NAME = "stop_name"
+ATTR_STOP_CODE = "stop_code"
 
 
 def normalize_stop_id(stop_id: str) -> str:
@@ -73,6 +81,7 @@ query GetDeparturesForStops($ids: [String!]!, $numberOfDepartures: Int!) {
   stops: stops(ids: $ids) {
     gtfsId
     name
+    code
     alerts {
       alertSeverityLevel
       alertHeaderText

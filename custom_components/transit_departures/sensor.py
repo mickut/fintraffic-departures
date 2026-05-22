@@ -12,9 +12,16 @@ from .const import (
     ATTR_ALERTS,
     ATTR_NEXT_DEPARTURES,
     ATTR_PRIMARY_DEPARTURE,
+    ATTR_STOP_CODE,
     ATTR_STOP_ID,
     ATTR_STOP_NAME,
+    CONF_DISABLE_STOP_SUFFIX,
+    CONF_PREFIX,
+    CONF_STOP_SUFFIX,
     CONF_STOP_ID,
+    CONF_SUFFIX,
+    DEFAULT_PREFIX,
+    DEFAULT_SUFFIX,
     DOMAIN,
     SUBENTRY_TYPE_STOP,
 )
@@ -56,7 +63,13 @@ class TransitDepartureSensor(CoordinatorEntity[TransitDeparturesCoordinator], Se
 
     @property
     def name(self) -> str:
-        return f"{self._stop_data.stop_name} Next Departure"
+        parts = [
+            self._global_prefix,
+            self._stop_data.stop_name,
+            self._resolved_stop_suffix_for_name,
+            self._global_suffix,
+        ]
+        return " ".join(part for part in parts if part)
 
     @property
     def available(self) -> bool:
@@ -77,10 +90,48 @@ class TransitDepartureSensor(CoordinatorEntity[TransitDeparturesCoordinator], Se
         return {
             ATTR_STOP_ID: self._stop_data.stop_id,
             ATTR_STOP_NAME: self._stop_data.stop_name,
+            ATTR_STOP_CODE: self._resolved_stop_code_attribute,
             ATTR_PRIMARY_DEPARTURE: primary,
             ATTR_NEXT_DEPARTURES: next_departures,
             ATTR_ALERTS: alerts,
         }
+
+    @property
+    def _global_prefix(self) -> str:
+        return str(
+            self._entry.options.get(
+                CONF_PREFIX,
+                self._entry.data.get(CONF_PREFIX, DEFAULT_PREFIX),
+            )
+        ).strip()
+
+    @property
+    def _global_suffix(self) -> str:
+        return str(
+            self._entry.options.get(
+                CONF_SUFFIX,
+                self._entry.data.get(CONF_SUFFIX, DEFAULT_SUFFIX),
+            )
+        ).strip()
+
+    @property
+    def _resolved_stop_suffix_for_name(self) -> str:
+        if bool(self._subentry.data.get(CONF_DISABLE_STOP_SUFFIX, False)):
+            return ""
+
+        custom_suffix = self._subentry.data.get(CONF_STOP_SUFFIX)
+        if isinstance(custom_suffix, str) and custom_suffix.strip():
+            return custom_suffix.strip()
+
+        return self._stop_data.stop_code or ""
+
+    @property
+    def _resolved_stop_code_attribute(self) -> str | None:
+        custom_suffix = self._subentry.data.get(CONF_STOP_SUFFIX)
+        if isinstance(custom_suffix, str) and custom_suffix.strip():
+            return custom_suffix.strip()
+
+        return self._stop_data.stop_code
 
     @property
     def _stop_data(self) -> StopData:
@@ -89,6 +140,7 @@ class TransitDepartureSensor(CoordinatorEntity[TransitDeparturesCoordinator], Se
             StopData(
                 stop_id=self._stop_id,
                 stop_name=self._stop_id,
+                stop_code=None,
                 departures=(),
                 alerts=(),
             ),

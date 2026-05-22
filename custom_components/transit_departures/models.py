@@ -60,5 +60,6 @@ class DepartureInfo:
 class StopData:
     stop_id: str
     stop_name: str
+    stop_code: str | None
     departures: tuple[DepartureInfo, ...]
     alerts: tuple[AlertInfo, ...]
