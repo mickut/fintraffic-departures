@@ -1,5 +1,6 @@
 {
   "name": "Transit Departures Finland",
   "render_readme": true,
-  "homeassistant": "2026.5.0"
+  "homeassistant": "2026.5.0",
+  "country": ["FI"]
 }
