@@ -60,7 +60,10 @@ def test_sensor_native_value_and_attributes() -> None:
         data={"prefix": "", "suffix": "Next Departure"},
         options={},
     )
-    subentry = SimpleNamespace(subentry_id="sub-1", data={"stop_id": "HSL:1040273"})
+    subentry = SimpleNamespace(
+        subentry_id="sub-1",
+        data={"stop_id": "HSL:1040273", "disable_stop_suffix": False},
+    )
 
     sensor = TransitDepartureSensor(coordinator, entry, subentry)
 
@@ -116,7 +119,7 @@ def test_sensor_name_uses_custom_and_disabled_suffix_rules() -> None:
 
     custom_subentry = SimpleNamespace(
         subentry_id="sub-1",
-        data={"stop_id": "HSL:1040273", "stop_suffix": "Gate A"},
+        data={"stop_id": "HSL:1040273", "stop_suffix": "Gate A", "disable_stop_suffix": False},
     )
     custom_sensor = TransitDepartureSensor(coordinator, entry, custom_subentry)
     assert custom_sensor.name == "Bus Helsinki Main Gate A Next Departure"
@@ -129,3 +132,24 @@ def test_sensor_name_uses_custom_and_disabled_suffix_rules() -> None:
     disabled_sensor = TransitDepartureSensor(coordinator, entry, disabled_subentry)
     assert disabled_sensor.name == "Bus Helsinki Main Next Departure"
     assert disabled_sensor.extra_state_attributes["stop_code"] == "H1243"
+
+
+def test_sensor_legacy_subentry_without_disable_flag_keeps_suffix_hidden() -> None:
+    stop_data = StopData(
+        stop_id="HSL:1040273",
+        stop_name="Helsinki Main",
+        stop_code="H1243",
+        departures=(),
+        alerts=(),
+    )
+    coordinator = _DummyCoordinator({"HSL:1040273": stop_data})
+    entry = SimpleNamespace(
+        entry_id="entry-1",
+        data={"prefix": "", "suffix": "Next Departure"},
+        options={},
+    )
+    legacy_subentry = SimpleNamespace(subentry_id="sub-legacy", data={"stop_id": "HSL:1040273"})
+
+    sensor = TransitDepartureSensor(coordinator, entry, legacy_subentry)
+
+    assert sensor.name == "Helsinki Main Next Departure"

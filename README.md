@@ -71,6 +71,53 @@ Main attributes:
 - `stop_id`
 - `stop_name`
 
+## Local development (VS Code)
+
+### Minimum required venv
+
+The minimum supported local development environment is:
+
+- Python `3.14+` (this project currently targets `3.14`)
+- A virtual environment in `.venv`
+- Test extras installed from this project (`homeassistant`, `pytest`, `pytest-asyncio`, `pytest-socket`, `pytest-cov`)
+
+Windows setup:
+
+```powershell
+py -3.14 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e .[test]
+```
+
+Quick verification:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests
+```
+
+Recommended workspace settings for running tests from the project virtual environment and enabling coverage by default in the VS Code test runner:
+
+```json
+{
+ "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+ "python.testing.pytestEnabled": true,
+ "python.testing.pytestArgs": [
+  "tests",
+  "--cov=custom_components/transit_departures",
+  "--cov-report=term-missing",
+  "--cov-report=xml"
+ ]
+}
+```
+
+Notes:
+- If needed, you can run the same command in a terminal with:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests --cov=custom_components/transit_departures --cov-report=term-missing --cov-report=xml
+```
+
 ***
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/mickut/ha-transit-departures.svg?style=for-the-badge

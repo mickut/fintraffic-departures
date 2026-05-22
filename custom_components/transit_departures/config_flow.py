@@ -271,9 +271,8 @@ class TransitStopSubentryFlowHandler(ConfigSubentryFlow):
                 return self.async_abort(reason="already_configured")
 
         subentry_data: dict[str, Any] = {CONF_STOP_ID: stop_id}
-        if disable_stop_suffix:
-            subentry_data[CONF_DISABLE_STOP_SUFFIX] = True
-        elif stop_suffix:
+        subentry_data[CONF_DISABLE_STOP_SUFFIX] = bool(disable_stop_suffix)
+        if not disable_stop_suffix and stop_suffix:
             subentry_data[CONF_STOP_SUFFIX] = stop_suffix
 
         return self.async_create_entry(

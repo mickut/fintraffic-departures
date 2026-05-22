@@ -149,7 +149,11 @@ async def test_create_stop_subentry_stores_custom_suffix(monkeypatch: pytest.Mon
         disable_stop_suffix=False,
     )
 
-    assert result["data"] == {"stop_id": "HSL:1040273", "stop_suffix": "Gate A"}
+    assert result["data"] == {
+        "stop_id": "HSL:1040273",
+        "disable_stop_suffix": False,
+        "stop_suffix": "Gate A",
+    }
 
 
 @pytest.mark.asyncio

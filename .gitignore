@@ -18,6 +18,9 @@ htmlcov/
 # Test reports
 coverage.xml
 
+# IDE and editor settings
+.vscode/settings.json
+
 # Editors and OS files
 .DS_Store
 Thumbs.db

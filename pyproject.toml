@@ -30,4 +30,3 @@ select = ["E", "F", "I", "UP"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
-addopts = "--cov=custom_components/transit_departures --cov-report=term-missing --cov-report=xml"

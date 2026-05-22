@@ -116,7 +116,12 @@ class TransitDepartureSensor(CoordinatorEntity[TransitDeparturesCoordinator], Se
 
     @property
     def _resolved_stop_suffix_for_name(self) -> str:
-        if bool(self._subentry.data.get(CONF_DISABLE_STOP_SUFFIX, False)):
+        # Legacy subentries created before the flag existed should keep old naming.
+        disable_stop_suffix = self._subentry.data.get(CONF_DISABLE_STOP_SUFFIX)
+        if disable_stop_suffix is None:
+            disable_stop_suffix = True
+
+        if bool(disable_stop_suffix):
             return ""
 
         custom_suffix = self._subentry.data.get(CONF_STOP_SUFFIX)
