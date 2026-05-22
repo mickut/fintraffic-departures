@@ -23,6 +23,7 @@ def graphql_stops_payload() -> list[dict]:
         {
             "gtfsId": "HSL:1040273",
             "name": "Helsinki Main",
+            "code": "H1243",
             "alerts": [
                 {
                     "alertSeverityLevel": "INFO",

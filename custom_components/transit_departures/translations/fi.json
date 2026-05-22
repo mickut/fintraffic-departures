@@ -7,7 +7,9 @@
         "data": {
           "number_of_departures": "Lähtöjen määrä",
           "cutoff_minutes": "Rajaus minuutteina",
-          "update_interval_minutes": "API-päivitysväli minuutteina"
+          "update_interval_minutes": "API-päivitysväli minuutteina",
+          "prefix": "Yleinen nimen etuliite",
+          "suffix": "Yleinen nimen loppuliite"
         }
       }
     },
@@ -31,9 +33,11 @@
         },
         "select_stop": {
           "title": "Valitse pysäkki",
-          "description": "Valitse pysäkki hakutuloksista.",
+          "description": "Valitse pysäkki hakutuloksista ja halutessasi määritä pysäkin loppuliite.",
           "data": {
-            "stop_id": "Hakua vastaava pysäkki"
+            "stop_id": "Hakua vastaava pysäkki",
+            "stop_suffix": "Mukautettu pysäkin loppuliite",
+            "disable_stop_suffix": "Poista pysäkin loppuliite sensorin nimestä"
           }
         }
       },
@@ -44,6 +48,18 @@
       },
       "abort": {
         "already_configured": "Tämä pysäkki on jo määritetty."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nimeämisasetukset",
+        "description": "Muokkaa lähtösensoreiden yhteistä etu- ja loppuliitettä.",
+        "data": {
+          "prefix": "Yleinen nimen etuliite",
+          "suffix": "Yleinen nimen loppuliite"
+        }
       }
     }
   }

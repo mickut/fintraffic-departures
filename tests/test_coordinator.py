@@ -129,6 +129,7 @@ def test_normalize_stops_adds_missing_configured_stop() -> None:
             {
                 "gtfsId": "HSL:1040273",
                 "name": "Helsinki Main",
+                "code": "H1243",
                 "alerts": [],
                 "stoptimesForPatterns": [],
             }
@@ -140,6 +141,8 @@ def test_normalize_stops_adds_missing_configured_stop() -> None:
 
     assert "HSL:1040273" in normalized
     assert "HSL:1041402" in normalized
+    assert normalized["HSL:1040273"].stop_code == "H1243"
+    assert normalized["HSL:1041402"].stop_code is None
     assert normalized["HSL:1041402"].departures == ()
     assert normalized["HSL:1041402"].alerts == ()
 

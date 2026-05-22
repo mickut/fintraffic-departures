@@ -7,7 +7,9 @@
         "data": {
           "number_of_departures": "Antal avgångar",
           "cutoff_minutes": "Gräns i minuter",
-          "update_interval_minutes": "API-uppdateringsintervall i minuter"
+          "update_interval_minutes": "API-uppdateringsintervall i minuter",
+          "prefix": "Globalt namnsprefix",
+          "suffix": "Globalt namnsuffix"
         }
       }
     },
@@ -31,9 +33,11 @@
         },
         "select_stop": {
           "title": "Välj hållplats",
-          "description": "Välj en hållplats från sökresultaten.",
+          "description": "Välj en hållplats från sökresultaten och justera vid behov hållplatsens suffix.",
           "data": {
-            "stop_id": "Matchande hållplats"
+            "stop_id": "Matchande hållplats",
+            "stop_suffix": "Anpassat hållplatssuffix",
+            "disable_stop_suffix": "Inaktivera hållplatssuffix i sensorns namn"
           }
         }
       },
@@ -44,6 +48,18 @@
       },
       "abort": {
         "already_configured": "Den här hållplatsen är redan konfigurerad."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Namnalternativ",
+        "description": "Justera gemensamt prefix/suffix för avgångssensorer.",
+        "data": {
+          "prefix": "Globalt namnsprefix",
+          "suffix": "Globalt namnsuffix"
+        }
       }
     }
   }

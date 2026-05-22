@@ -24,12 +24,19 @@ from .api import TransitApiClient, TransitApiError
 
 from .const import (
     CONF_CUTOFF_MINUTES,
+    CONF_DISABLE_STOP_SUFFIX,
     CONF_NUMBER_OF_DEPARTURES,
+    CONF_PREFIX,
+    CONF_STOP_SUFFIX,
     CONF_STOP_ID,
     CONF_STOP_LOOKUP_QUERY,
+    CONF_SUFFIX,
     CONF_UPDATE_INTERVAL_MINUTES,
     DEFAULT_CUTOFF_MINUTES,
+    DEFAULT_DISABLE_STOP_SUFFIX,
     DEFAULT_NUMBER_OF_DEPARTURES,
+    DEFAULT_PREFIX,
+    DEFAULT_SUFFIX,
     DEFAULT_UPDATE_INTERVAL_MINUTES,
     DOMAIN,
     SUBENTRY_TYPE_STOP,
@@ -78,6 +85,11 @@ class TransitDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Return supported stop subentries."""
         return {SUBENTRY_TYPE_STOP: TransitStopSubentryFlowHandler}
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> config_entries.OptionsFlow:
+        return TransitDeparturesOptionsFlow(config_entry)
+
     async def async_step_user(
         self, user_input: Mapping[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -87,6 +99,8 @@ class TransitDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             number_of_departures = user_input[CONF_NUMBER_OF_DEPARTURES]
             cutoff_minutes = user_input[CONF_CUTOFF_MINUTES]
             update_interval_minutes = user_input[CONF_UPDATE_INTERVAL_MINUTES]
+            prefix = user_input.get(CONF_PREFIX, "")
+            suffix = user_input.get(CONF_SUFFIX, "")
 
             if number_of_departures < 1:
                 errors[CONF_NUMBER_OF_DEPARTURES] = "invalid_departure_count"
@@ -101,6 +115,8 @@ class TransitDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_NUMBER_OF_DEPARTURES: number_of_departures,
                         CONF_CUTOFF_MINUTES: cutoff_minutes,
                         CONF_UPDATE_INTERVAL_MINUTES: update_interval_minutes,
+                        CONF_PREFIX: prefix,
+                        CONF_SUFFIX: suffix,
                     },
                 )
 
@@ -118,6 +134,14 @@ class TransitDeparturesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_UPDATE_INTERVAL_MINUTES,
                     default=DEFAULT_UPDATE_INTERVAL_MINUTES,
                 ): vol.All(vol.Coerce(int), vol.Range(min=1, max=1440)),
+                vol.Required(
+                    CONF_PREFIX,
+                    default=DEFAULT_PREFIX,
+                ): selector.TextSelector(),
+                vol.Required(
+                    CONF_SUFFIX,
+                    default=DEFAULT_SUFFIX,
+                ): selector.TextSelector(),
             }
         )
 
@@ -201,8 +225,15 @@ class TransitStopSubentryFlowHandler(ConfigSubentryFlow):
                 errors[CONF_STOP_ID] = "invalid_stop_id"
             else:
                 stop_id, title = selection
+                stop_suffix = user_input.get(CONF_STOP_SUFFIX, "").strip()
+                disable_stop_suffix = bool(user_input.get(CONF_DISABLE_STOP_SUFFIX, False))
                 self._search_results = []
-                return await self._async_create_stop_subentry(stop_id, title)
+                return await self._async_create_stop_subentry(
+                    stop_id,
+                    title,
+                    stop_suffix=stop_suffix,
+                    disable_stop_suffix=disable_stop_suffix,
+                )
 
         if not options:
             return self.async_show_form(
@@ -217,7 +248,12 @@ class TransitStopSubentryFlowHandler(ConfigSubentryFlow):
                     selector.SelectSelectorConfig(
                         options=options,
                     )
-                )
+                ),
+                vol.Optional(CONF_STOP_SUFFIX, default=""): selector.TextSelector(),
+                vol.Required(
+                    CONF_DISABLE_STOP_SUFFIX,
+                    default=DEFAULT_DISABLE_STOP_SUFFIX,
+                ): selector.BooleanSelector(),
             }
         )
 
@@ -227,13 +263,47 @@ class TransitStopSubentryFlowHandler(ConfigSubentryFlow):
         self,
         stop_id: str,
         title: str,
+        stop_suffix: str = "",
+        disable_stop_suffix: bool = DEFAULT_DISABLE_STOP_SUFFIX,
     ) -> SubentryFlowResult:
         for existing_subentry in self._get_entry().subentries.values():
             if existing_subentry.unique_id == stop_id:
                 return self.async_abort(reason="already_configured")
 
+        subentry_data: dict[str, Any] = {CONF_STOP_ID: stop_id}
+        subentry_data[CONF_DISABLE_STOP_SUFFIX] = bool(disable_stop_suffix)
+        if not disable_stop_suffix and stop_suffix:
+            subentry_data[CONF_STOP_SUFFIX] = stop_suffix
+
         return self.async_create_entry(
             title=title,
             unique_id=stop_id,
-            data={CONF_STOP_ID: stop_id},
+            data=subentry_data,
         )
+
+
+class TransitDeparturesOptionsFlow(config_entries.OptionsFlow):
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        self._config_entry = config_entry
+
+    async def async_step_init(self, user_input: Mapping[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(title="", data=dict(user_input))
+
+        prefix_default = self._config_entry.options.get(
+            CONF_PREFIX,
+            self._config_entry.data.get(CONF_PREFIX, DEFAULT_PREFIX),
+        )
+        suffix_default = self._config_entry.options.get(
+            CONF_SUFFIX,
+            self._config_entry.data.get(CONF_SUFFIX, DEFAULT_SUFFIX),
+        )
+
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_PREFIX, default=prefix_default): selector.TextSelector(),
+                vol.Required(CONF_SUFFIX, default=suffix_default): selector.TextSelector(),
+            }
+        )
+
+        return self.async_show_form(step_id="init", data_schema=schema, errors={})

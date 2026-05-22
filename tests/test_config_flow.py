@@ -125,3 +125,57 @@ async def test_create_stop_subentry_aborts_if_already_configured(monkeypatch: py
     result = await handler._async_create_stop_subentry("HSL:1040273", "Helsinki Main")
 
     assert result == {"type": "abort", "reason": "already_configured"}
+
+
+@pytest.mark.asyncio
+async def test_create_stop_subentry_stores_custom_suffix(monkeypatch: pytest.MonkeyPatch) -> None:
+    handler = TransitStopSubentryFlowHandler()
+    monkeypatch.setattr(handler, "_get_entry", lambda: SimpleNamespace(subentries={}))
+    monkeypatch.setattr(
+        handler,
+        "async_create_entry",
+        lambda *, title, unique_id, data: {
+            "type": "create_entry",
+            "title": title,
+            "unique_id": unique_id,
+            "data": data,
+        },
+    )
+
+    result = await handler._async_create_stop_subentry(
+        "HSL:1040273",
+        "Helsinki Main",
+        stop_suffix="Gate A",
+        disable_stop_suffix=False,
+    )
+
+    assert result["data"] == {
+        "stop_id": "HSL:1040273",
+        "disable_stop_suffix": False,
+        "stop_suffix": "Gate A",
+    }
+
+
+@pytest.mark.asyncio
+async def test_create_stop_subentry_stores_disable_stop_suffix(monkeypatch: pytest.MonkeyPatch) -> None:
+    handler = TransitStopSubentryFlowHandler()
+    monkeypatch.setattr(handler, "_get_entry", lambda: SimpleNamespace(subentries={}))
+    monkeypatch.setattr(
+        handler,
+        "async_create_entry",
+        lambda *, title, unique_id, data: {
+            "type": "create_entry",
+            "title": title,
+            "unique_id": unique_id,
+            "data": data,
+        },
+    )
+
+    result = await handler._async_create_stop_subentry(
+        "HSL:1040273",
+        "Helsinki Main",
+        stop_suffix="Gate A",
+        disable_stop_suffix=True,
+    )
+
+    assert result["data"] == {"stop_id": "HSL:1040273", "disable_stop_suffix": True}

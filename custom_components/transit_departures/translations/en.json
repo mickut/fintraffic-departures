@@ -7,7 +7,9 @@
         "data": {
           "number_of_departures": "Number of departures",
           "cutoff_minutes": "Cutoff minutes",
-          "update_interval_minutes": "API update interval in minutes"
+          "update_interval_minutes": "API update interval in minutes",
+          "prefix": "Global name prefix",
+          "suffix": "Global name suffix"
         }
       }
     },
@@ -31,9 +33,11 @@
         },
         "select_stop": {
           "title": "Select stop",
-          "description": "Choose a stop from the search results.",
+          "description": "Choose a stop from the search results and optionally override stop suffix behavior.",
           "data": {
-            "stop_id": "Matching stop"
+            "stop_id": "Matching stop",
+            "stop_suffix": "Custom stop suffix",
+            "disable_stop_suffix": "Disable stop suffix in sensor name"
           }
         }
       },
@@ -44,6 +48,18 @@
       },
       "abort": {
         "already_configured": "This stop is already configured."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Naming options",
+        "description": "Adjust shared name prefix/suffix for departure sensors.",
+        "data": {
+          "prefix": "Global name prefix",
+          "suffix": "Global name suffix"
+        }
       }
     }
   }
