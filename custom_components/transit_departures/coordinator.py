@@ -102,7 +102,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
 
     def _normalize_stops(
         self,
-        stops: list[dict[str, Any]],
+        stops: list[Any],
         configured_stop_ids: list[str],
         number_of_departures: int,
         cutoff_minutes: int,
@@ -111,6 +111,9 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
         normalized: dict[str, StopData] = {}
 
         for stop in stops:
+            if not isinstance(stop, dict):
+                continue
+
             stop_id = stop.get("gtfsId")
             if not stop_id:
                 continue
@@ -149,6 +152,9 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
         now = datetime.now(UTC)
         normalized_alerts: list[AlertInfo] = []
         for alert in alerts:
+            if not isinstance(alert, dict):
+                continue
+
             effective_start = _parse_datetime(alert.get("effectiveStartDate"))
             effective_end = _parse_datetime(alert.get("effectiveEndDate"))
 
@@ -186,9 +192,15 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
         merged_departures: list[DepartureInfo] = []
 
         for grouped_stoptime in stoptimes_for_patterns:
+            if not isinstance(grouped_stoptime, dict):
+                continue
+
             pattern = grouped_stoptime.get("pattern") or {}
             route = pattern.get("route") or {}
             for stoptime in grouped_stoptime.get("stoptimes") or []:
+                if not isinstance(stoptime, dict):
+                    continue
+
                 service_day = stoptime.get("serviceDay")
                 scheduled_offset = stoptime.get("scheduledDeparture")
                 realtime_offset = stoptime.get("realtimeDeparture")
