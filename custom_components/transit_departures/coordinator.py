@@ -54,7 +54,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
         )
         self.entry = entry
         self.api = TransitApiClient(async_get_clientsession(hass))
-        self._cached_stops: list[dict[str, Any]] | None = None
+        self._cached_stops: list[dict[str, Any] | None] | None = None
         self._last_api_refresh: datetime | None = None
 
     async def _async_update_data(self) -> dict[str, StopData]:
@@ -102,7 +102,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
 
     def _normalize_stops(
         self,
-        stops: list[Any],
+        stops: list[dict[str, Any] | None],
         configured_stop_ids: list[str],
         number_of_departures: int,
         cutoff_minutes: int,
@@ -148,7 +148,10 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
 
         return normalized
 
-    def _normalize_alerts(self, alerts: tuple[dict[str, Any], ...] | list[dict[str, Any]]) -> tuple[AlertInfo, ...]:
+    def _normalize_alerts(
+        self,
+        alerts: tuple[dict[str, Any] | None, ...] | list[dict[str, Any] | None],
+    ) -> tuple[AlertInfo, ...]:
         now = datetime.now(UTC)
         normalized_alerts: list[AlertInfo] = []
         for alert in alerts:
@@ -185,7 +188,7 @@ class TransitDeparturesCoordinator(DataUpdateCoordinator[dict[str, StopData]]):
         self,
         stop_id: str,
         stop_name: str,
-        stoptimes_for_patterns: tuple[dict[str, Any], ...] | list[dict[str, Any]],
+        stoptimes_for_patterns: tuple[dict[str, Any] | None, ...] | list[dict[str, Any] | None],
         minimum_departure: datetime,
         number_of_departures: int,
     ) -> tuple[DepartureInfo, ...]:

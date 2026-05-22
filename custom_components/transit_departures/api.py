@@ -84,7 +84,7 @@ class TransitApiClient:
         self,
         stop_ids: list[str],
         number_of_departures: int,
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, Any] | None]:
         payload = {
             "operationName": "GetDeparturesForStops",
             "variables": {
